@@ -4,6 +4,8 @@ import json
 import struct
 from math import sqrt
 import time
+import webbrowser as wb
+from fuzzywuzzy import fuzz
 
 
 # Settings
@@ -75,7 +77,33 @@ class Assistant:
                 text = json.loads(self.rec.Result())
                 task = text['text']
                 if key_word in task:
-                    self.speech_to_text()
+                    self.cmd(self.speech_to_text())
 
     def cmd(self, task):
+        tasks = {
+            ("открой ютуб", "запусти ютуб"): self.youtube,
+            ("открой вк", "запусти вк"): self.vk,
+            ("пока", "заверши работу"): exit(0)
+        }
+
+        # inaccurate search
+        max_similar = 0
+        cmd = ''
+        for ls in tasks:
+            for i in ls:
+                rate_similar = fuzz.ratio(task, i)
+                if rate_similar > 75 and rate_similar > max_similar:
+                    max_similar = rate_similar
+                    cmd = ls
+        tasks[cmd]()
+
+    @staticmethod
+    def youtube():
+        return wb.open("https://www.youtube.com/")
+
+    @staticmethod
+    def vk():
+        return wb.open("https://vk.com/feed")
+
+    def web_search(self):
         pass
