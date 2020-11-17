@@ -18,6 +18,7 @@ TIMEOUT_LENGTH = 3
 SHORT_NORMALIZE = 1.0 / 32768.0
 Threshold = 10
 key_word = 'пирс'
+search_tags = ("что такое", "кто такой", "кто такая", "найди")
 
 
 # Voice Assistant
@@ -83,19 +84,22 @@ class Assistant:
         tasks = {
             ("открой ютуб", "запусти ютуб"): self.youtube,
             ("открой вк", "запусти вк"): self.vk,
-            ("пока", "заверши работу"): exit(0)
+            ("пока", "заверши работу"): exit
         }
 
+        max_similar = 0     # the coefficient of similarity
+        cmd = ''            # command
         # inaccurate search
-        max_similar = 0
-        cmd = ''
         for ls in tasks:
             for i in ls:
                 rate_similar = fuzz.ratio(task, i)
                 if rate_similar > 75 and rate_similar > max_similar:
                     max_similar = rate_similar
                     cmd = ls
-        tasks[cmd]()
+        try:
+            tasks[cmd]()
+        except KeyError:
+            self.web_search(task)
 
     @staticmethod
     def youtube():
@@ -103,7 +107,12 @@ class Assistant:
 
     @staticmethod
     def vk():
-        return wb.open("https://vk.com/feed")
+        return wb.open("https://vk.com/")
 
-    def web_search(self):
+    @staticmethod
+    def web_search(task):
+        return wb.open("https://yandex.ru/search/?lr=64&text={}".format(task))
+
+    @staticmethod
+    def greeting():
         pass
