@@ -6,6 +6,7 @@ from math import sqrt
 import time
 import webbrowser as wb
 from fuzzywuzzy import fuzz
+from os import system
 
 
 # Settings
@@ -18,7 +19,6 @@ TIMEOUT_LENGTH = 3
 SHORT_NORMALIZE = 1.0 / 32768.0
 Threshold = 10
 key_word = 'пирс'
-search_tags = ("что такое", "кто такой", "кто такая", "найди")
 
 
 # Voice Assistant
@@ -80,15 +80,23 @@ class Assistant:
                 if key_word in task:
                     self.cmd(self.speech_to_text())
 
+    # commands execution
     def cmd(self, task):
         tasks = {
+            # internet and social networks
             ("открой ютуб", "запусти ютуб"): self.youtube,
             ("открой вк", "запусти вк"): self.vk,
+            # system commands and windows apps
+            ("открой диспетчер задач", "запусти диспетчер задач"): self.taskmgr,
+            ("открой панель управления", "запусти панель управления"): self.control,
+            ("открой проводник", "запусти проводник", "открой мой компьютер", "запусти мой компьютер"): self.explorer,
+            ("открой калькулятор", "запусти калькулятор"): self.calc,
             ("пока", "заверши работу"): exit
         }
 
         max_similar = 0     # the coefficient of similarity
         cmd = ''            # command
+
         # inaccurate search
         for ls in tasks:
             for i in ls:
@@ -101,6 +109,7 @@ class Assistant:
         except KeyError:
             self.web_search(task)
 
+    # Functions
     @staticmethod
     def youtube():
         return wb.open("https://www.youtube.com/")
@@ -111,7 +120,23 @@ class Assistant:
 
     @staticmethod
     def web_search(task):
-        return wb.open("https://yandex.ru/search/?lr=64&text={}".format(task))
+        return wb.open(f"https://yandex.ru/search/?lr=64&text={task}")
+
+    @staticmethod
+    def taskmgr():
+        return system("powershell taskmgr")
+
+    @staticmethod
+    def control():
+        return system("control")
+
+    @staticmethod
+    def explorer():
+        return system("explorer")
+
+    @staticmethod
+    def calc():
+        return system("start calc")
 
     @staticmethod
     def greeting():
