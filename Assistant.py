@@ -8,16 +8,14 @@ import webbrowser as wb
 from fuzzywuzzy import fuzz
 from os import system
 
-
 # Settings
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 16000
 FPB = 8000
-swidth = 2
 TIMEOUT_LENGTH = 3
 SHORT_NORMALIZE = 1.0 / 32768.0
-Threshold = 10
+Threshold = 20
 key_word = 'пирс'
 
 
@@ -43,7 +41,7 @@ class Assistant:
     # rms(rated maximum sinusoidal) noise calculation
     @staticmethod
     def rms(frame):
-        count = len(frame) / swidth
+        count = len(frame) / 2
         form = "%dh" % count
         shorts = struct.unpack(form, frame)
         sum_squares = 0.0
@@ -90,12 +88,15 @@ class Assistant:
             ("открой диспетчер задач", "запусти диспетчер задач"): self.taskmgr,
             ("открой панель управления", "запусти панель управления"): self.control,
             ("открой проводник", "запусти проводник", "открой мой компьютер", "запусти мой компьютер"): self.explorer,
+            ("открой параметры", "запусти параметры"): self.params,
+            ("выключи компьютер", "выключи пк"): self.turn_off,
+            ("перезагрузи компьютер", "перезагрузи пк"): self.refresh,
             ("открой калькулятор", "запусти калькулятор"): self.calc,
             ("пока", "заверши работу"): exit
         }
 
-        max_similar = 0     # the coefficient of similarity
-        cmd = ''            # command
+        max_similar = 0  # the coefficient of similarity
+        cmd = ''  # command
 
         # inaccurate search
         for ls in tasks:
@@ -124,7 +125,7 @@ class Assistant:
 
     @staticmethod
     def taskmgr():
-        return system("powershell taskmgr")
+        return system("taskmgr")
 
     @staticmethod
     def control():
@@ -137,6 +138,18 @@ class Assistant:
     @staticmethod
     def calc():
         return system("start calc")
+
+    @staticmethod
+    def params():
+        return system("dpiscaling")
+
+    @staticmethod
+    def turn_off():
+        return system("shutdown")
+
+    @staticmethod
+    def refresh():
+        return system("shutdown -r")
 
     @staticmethod
     def greeting():
