@@ -4,9 +4,12 @@ import json
 import struct
 from math import sqrt
 import time
+from datetime import datetime
 import webbrowser as wb
 from fuzzywuzzy import fuzz
 from os import system
+from random import choice
+from playsound import playsound
 
 # Settings
 FORMAT = pyaudio.paInt16
@@ -17,6 +20,7 @@ TIMEOUT_LENGTH = 3
 SHORT_NORMALIZE = 1.0 / 32768.0
 Threshold = 20
 key_word = 'пирс'
+phrases_for_speech = ["Doing", "Please repeat", "Listen to you"]
 
 
 # Voice Assistant
@@ -55,7 +59,6 @@ class Assistant:
         task = ''
         now = time.time()
         end = time.time() + TIMEOUT_LENGTH
-        print('speak')
         while now <= end:
             data = self.stream.read(FPB)
             # checking the ambient volume
@@ -76,6 +79,7 @@ class Assistant:
                 text = json.loads(self.rec.Result())
                 task = text['text']
                 if key_word in task:
+                    playsound("Pirs phrases/Listen to you.mp3")
                     self.cmd(self.speech_to_text())
 
     # commands execution
@@ -92,11 +96,12 @@ class Assistant:
             ("выключи компьютер", "выключи пк"): self.turn_off,
             ("перезагрузи компьютер", "перезагрузи пк"): self.refresh,
             ("открой калькулятор", "запусти калькулятор"): self.calc,
-            ("пока", "заверши работу"): exit
+            ("пока", "заверши работу"): self.bye
         }
 
         max_similar = 0  # the coefficient of similarity
         cmd = ''  # command
+        search_tags = ("как", "кто такой", "кто такая", "что такое", "найди", "ищи", "найти")
 
         # inaccurate search
         for ls in tasks:
@@ -108,49 +113,71 @@ class Assistant:
         try:
             tasks[cmd]()
         except KeyError:
-            self.web_search(task)
+            for tag in search_tags:
+                if tag in task:
+                    return self.web_search(task.replace(tag, ""))
+            playsound("Pirs phrases/Please repeat.mp3")
+
+    @staticmethod
+    def random_phrase():
+        phrase = choice(phrases_for_speech)
+        audio_file = f"Pirs phrases/{phrase}.mp3"
+        return audio_file
 
     # Functions
-    @staticmethod
-    def youtube():
+    def youtube(self):
+        playsound(self.random_phrase())
         return wb.open("https://www.youtube.com/")
 
-    @staticmethod
-    def vk():
+    def vk(self):
+        playsound(self.random_phrase())
         return wb.open("https://vk.com/")
 
     @staticmethod
     def web_search(task):
-        return wb.open(f"https://yandex.ru/search/?lr=64&text={task}")
+        return wb.open(f"https://www.google.com/search?q={task}&sourceid=chrome&ie=UTF-8".replace(" ", "+"))
 
-    @staticmethod
-    def taskmgr():
+    def taskmgr(self):
+        playsound(self.random_phrase())
         return system("taskmgr")
 
-    @staticmethod
-    def control():
+    def control(self):
+        playsound(self.random_phrase())
         return system("control")
 
-    @staticmethod
-    def explorer():
+    def explorer(self):
+        playsound(self.random_phrase())
         return system("explorer")
 
-    @staticmethod
-    def calc():
+    def calc(self):
+        playsound(self.random_phrase())
         return system("start calc")
 
-    @staticmethod
-    def params():
+    def params(self):
+        playsound(self.random_phrase())
         return system("dpiscaling")
 
-    @staticmethod
-    def turn_off():
-        return system("shutdown")
+    def turn_off(self):
+        playsound(self.random_phrase())
+        return system("shutdown /s")
 
-    @staticmethod
-    def refresh():
-        return system("shutdown -r")
+    def refresh(self):
+        playsound(self.random_phrase())
+        return system("shutdown /r")
 
     @staticmethod
     def greeting():
-        pass
+        current_time = datetime.now()
+        if (current_time.hour > 6) and (current_time.hour < 12):
+            playsound(r"Pirs phrases\Good morning.mp3")
+        elif (current_time.hour > 12) and (current_time.hour < 18):
+            playsound(r"Pirs phrases\Good morning.mp3")
+        elif (current_time.hour > 19) and (current_time.hour < 23):
+            playsound(r"Pirs phrases\Good morning.mp3")
+        else:
+            playsound(r"Pirs phrases\Good morning.mp3")
+
+    @staticmethod
+    def bye():
+        playsound("Pirs phrases/Goodbye.mp3")
+        exit(0)
