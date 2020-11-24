@@ -10,6 +10,7 @@ from fuzzywuzzy import fuzz
 from os import system
 from random import choice
 from playsound import playsound
+from PyQt5 import QtCore
 
 # Settings
 FORMAT = pyaudio.paInt16
@@ -26,9 +27,10 @@ phrases_for_executing = ["Doing", "Will_be_done", "How_say_sir"]
 
 # Voice Assistant
 
-class Assistant:
+class Assistant(QtCore.QObject):
 
     def __init__(self):
+        super().__init__()
         self.Threshold = 20
         # vosk
         self.model = Model("speech_model")
