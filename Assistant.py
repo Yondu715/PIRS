@@ -17,10 +17,11 @@ CHANNELS = 1
 RATE = 16000
 FPB = 8000
 TIMEOUT_LENGTH = 3
+SAMPLE_WIDTH = 2
 SHORT_NORMALIZE = 1.0 / 32768.0
-Threshold = 20
+Energy_speech = 10
 key_word = 'пирс'
-phrases_for_speech = ["Doing", "Please repeat", "Listen to you"]
+phrases_for_executing = ["Doing", "Will_be_done", "How_say_sir"]
 
 
 # Voice Assistant
@@ -28,6 +29,7 @@ phrases_for_speech = ["Doing", "Please repeat", "Listen to you"]
 class Assistant:
 
     def __init__(self):
+        self.Threshold = 20
         # vosk
         self.model = Model("speech_model")
         self.rec = KaldiRecognizer(self.model, RATE)
@@ -45,7 +47,7 @@ class Assistant:
     # rms(rated maximum sinusoidal) noise calculation
     @staticmethod
     def rms(frame):
-        count = len(frame) / 2
+        count = len(frame) / SAMPLE_WIDTH
         form = "%dh" % count
         shorts = struct.unpack(form, frame)
         sum_squares = 0.0
@@ -55,14 +57,30 @@ class Assistant:
         rms = sqrt(sum_squares / count)
         return rms * 1000
 
+    # Automatically adjusts microphone level to the environment
+    def adjustment_to_noise(self, duration=1):
+        seconds_per_buffer = FPB/RATE
+        end_time = 0
+        while True:
+            end_time += seconds_per_buffer
+            if end_time > duration:
+                break
+            data = self.stream.read(FPB)
+            rms = self.rms(data)
+
+            damping = 0.15 ** seconds_per_buffer
+            target_rms = rms * 1.5
+            self.Threshold = Energy_speech * damping * target_rms * (1 - damping)
+
     def speech_to_text(self):
+        self.adjustment_to_noise()
         task = ''
         now = time.time()
         end = time.time() + TIMEOUT_LENGTH
         while now <= end:
             data = self.stream.read(FPB)
             # checking the ambient volume
-            if self.rms(data) >= Threshold:
+            if self.rms(data) >= self.Threshold:
                 end = time.time() + TIMEOUT_LENGTH / 1.2
             now = time.time()
             # vosk
@@ -79,7 +97,7 @@ class Assistant:
                 text = json.loads(self.rec.Result())
                 task = text['text']
                 if key_word in task:
-                    playsound("Pirs phrases/Listen to you.mp3")
+                    playsound("audio/Listen_to_you.mp3")
                     self.cmd(self.speech_to_text())
 
     # commands execution
@@ -100,7 +118,7 @@ class Assistant:
         }
 
         max_similar = 0  # the coefficient of similarity
-        cmd = ''  # command
+        cmd = ''         # command
         search_tags = ("как", "кто такой", "кто такая", "что такое", "найди", "ищи", "найти")
 
         # inaccurate search
@@ -116,12 +134,14 @@ class Assistant:
             for tag in search_tags:
                 if tag in task:
                     return self.web_search(task.replace(tag, ""))
-            playsound("Pirs phrases/Please repeat.mp3")
+            playsound("audio/Please_repeat.mp3")
+            self.cmd(self.speech_to_text())
 
+    # Choosing random phrase for executing command
     @staticmethod
     def random_phrase():
-        phrase = choice(phrases_for_speech)
-        audio_file = f"Pirs phrases/{phrase}.mp3"
+        phrase = choice(phrases_for_executing)
+        audio_file = f"audio/{phrase}.mp3"
         return audio_file
 
     # Functions
@@ -159,25 +179,25 @@ class Assistant:
 
     def turn_off(self):
         playsound(self.random_phrase())
-        return system("shutdown /s")
+        return system("shutdown /s /t 0")
 
     def refresh(self):
         playsound(self.random_phrase())
-        return system("shutdown /r")
+        return system("shutdown /r /t 0")
 
     @staticmethod
     def greeting():
         current_time = datetime.now()
         if (current_time.hour > 6) and (current_time.hour < 12):
-            playsound(r"Pirs phrases\Good morning.mp3")
+            playsound(r"audio\Good_morning.mp3")
         elif (current_time.hour > 12) and (current_time.hour < 18):
-            playsound(r"Pirs phrases\Good morning.mp3")
+            playsound(r"audio\Good_morning.mp3")
         elif (current_time.hour > 19) and (current_time.hour < 23):
-            playsound(r"Pirs phrases\Good morning.mp3")
+            playsound(r"audio\Good_morning.mp3")
         else:
-            playsound(r"Pirs phrases\Good morning.mp3")
+            playsound(r"audio\Good_morning.mp3")
 
     @staticmethod
     def bye():
-        playsound("Pirs phrases/Goodbye.mp3")
+        playsound("audio/Goodbye.mp3")
         exit(0)
