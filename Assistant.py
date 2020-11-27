@@ -10,6 +10,7 @@ from fuzzywuzzy import fuzz
 from os import system
 from random import choice
 from playsound import playsound
+from PyQt5 import QtCore
 
 # Settings
 FORMAT = pyaudio.paInt16
@@ -24,11 +25,13 @@ key_word = 'пирс'
 phrases_for_executing = ["Doing", "Will_be_done", "How_say_sir"]
 
 
-# Voice Assistant
+""" ---> Voice Assistant <--- """
 
-class Assistant:
+
+class Assistant(QtCore.QObject):
 
     def __init__(self):
+        super().__init__()
         self.Threshold = 20
         # vosk
         self.model = Model("speech_model")
@@ -142,15 +145,15 @@ class Assistant:
     def random_phrase():
         phrase = choice(phrases_for_executing)
         audio_file = f"audio/{phrase}.mp3"
-        return audio_file
+        playsound(audio_file, block=False)
 
     # Functions
     def youtube(self):
-        playsound(self.random_phrase())
+        playsound(self.random_phrase(), block=False)
         return wb.open("https://www.youtube.com/")
 
     def vk(self):
-        playsound(self.random_phrase())
+        self.random_phrase()
         return wb.open("https://vk.com/")
 
     @staticmethod
@@ -158,31 +161,31 @@ class Assistant:
         return wb.open(f"https://www.google.com/search?q={task}&sourceid=chrome&ie=UTF-8".replace(" ", "+"))
 
     def taskmgr(self):
-        playsound(self.random_phrase())
+        self.random_phrase()
         return system("taskmgr")
 
     def control(self):
-        playsound(self.random_phrase())
+        self.random_phrase()
         return system("control")
 
     def explorer(self):
-        playsound(self.random_phrase())
+        self.random_phrase()
         return system("explorer")
 
     def calc(self):
-        playsound(self.random_phrase())
+        self.random_phrase()
         return system("start calc")
 
     def params(self):
-        playsound(self.random_phrase())
+        self.random_phrase()
         return system("dpiscaling")
 
     def turn_off(self):
-        playsound(self.random_phrase())
+        self.random_phrase()
         return system("shutdown /s /t 0")
 
     def refresh(self):
-        playsound(self.random_phrase())
+        self.random_phrase()
         return system("shutdown /r /t 0")
 
     @staticmethod
