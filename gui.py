@@ -1,8 +1,9 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox, QMainWindow
+from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
 from PyQt5 import uic, QtGui
 from PyQt5.QtCore import Qt
 from Assistant import *
+
 
 class App(QWidget):
     def __init__(self):
@@ -15,17 +16,16 @@ class App(QWidget):
         self.ui.start.clicked.connect(self.Pirs.voice_activation)
         self.ui.start.clicked.connect(self.fix_label)
         self.thread.start()
-        self.ui.pushButton.clicked.connect(self.Dialog)
+        self.settings = uic.loadUi("settings.ui")
+        self.ui.pushButton.clicked.connect(self.dialog)
 
-    def Dialog(self):
-        self.ui = uic.loadUi("settings.ui")
-        self.ui.show()
-        self.thread = QtCore.QThread()
+    def dialog(self):
+        self.settings.show()
 
-    def check_microfone(self):
-        microphone_list = pyaudio.PyAudio().get_device_count()
+    def check_mic(self):
+        mic_list = pyaudio.PyAudio().get_device_count()
 
-        if microphone_list == []:
+        if not mic_list:
             description = 'Микрофоны не были обноружены в системе'
         else:
             description = 'Микрофон подключен'
