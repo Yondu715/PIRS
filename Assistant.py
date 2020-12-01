@@ -22,7 +22,10 @@ SAMPLE_WIDTH = 2
 SHORT_NORMALIZE = 1.0 / 32768.0
 Energy_speech = 10
 key_word = 'пирс'
-phrases_for_executing = ["Doing", "Will_be_done", "How_say_sir"]
+
+# Phrases
+phrases_for_executing = ["Doing.mp3", "Will_be_done.mp3", "How_say_sir.mp3"]
+phrases_for_web_search = ["Finding_information 1.mp3", "Finding_information 2.mp3", "Request_accepted.mp3"]
 
 
 """ ---> Voice Assistant <--- """
@@ -136,68 +139,84 @@ class Assistant(QtCore.QObject):
             for tag in search_tags:
                 if tag in task:
                     return self.web_search(task.replace(tag, ""))
-            playsound("audio/Please_repeat.mp3")
-            self.cmd(self.speech_to_text())
+            playsound("audio/Repeat_please.mp3")
+            new_task = self.speech_to_text()
+            if new_task != "":
+                self.cmd(new_task)
 
     # Choosing random phrase for executing command
     @staticmethod
-    def random_phrase():
-        phrase = choice(phrases_for_executing)
-        audio_file = f"audio/{phrase}.mp3"
+    def random_phrase(pr_phrase=None):
+        phrase = choice([choice(phrases_for_executing), pr_phrase])
+        audio_file = f"audio/{phrase}"
+        playsound(audio_file, block=False)
+
+    @staticmethod
+    def random_phrase_web():
+        phrase = choice(phrases_for_web_search)
+        audio_file = f"audio/{phrase}"
         playsound(audio_file, block=False)
 
     # Functions
     def youtube(self):
-        playsound(self.random_phrase(), block=False)
+        self.random_phrase("Youtube.mp3")
         return wb.open("https://www.youtube.com/")
 
     def vk(self):
-        self.random_phrase()
+        self.random_phrase("Vk.mp3")
         return wb.open("https://vk.com/")
 
-    @staticmethod
-    def web_search(task):
+    def web_search(self, task):
+        self.random_phrase_web()
         return wb.open(f"https://www.google.com/search?q={task}&sourceid=chrome&ie=UTF-8".replace(" ", "+"))
 
     def taskmgr(self):
-        self.random_phrase()
+        self.random_phrase("Opening.mp3")
         return system("taskmgr")
 
     def control(self):
-        self.random_phrase()
+        self.random_phrase("Control_panel.mp3")
         return system("control")
 
     def explorer(self):
-        self.random_phrase()
+        self.random_phrase("Opening.mp3")
         return system("explorer")
 
     def calc(self):
-        self.random_phrase()
+        self.random_phrase("Launching_Calculator.mp3")
         return system("start calc")
 
     def params(self):
-        self.random_phrase()
+        self.random_phrase("Opening.mp3")
         return system("dpiscaling")
 
     def turn_off(self):
-        self.random_phrase()
-        return system("shutdown /s /t 0")
+        playsound("audio/Confirm_action.mp3")
+        if self.speech_to_text() == "подтверждаю":
+            self.random_phrase()
+            return system("shutdown /s /t 0")
+        else:
+            return playsound("audio/How_say_sir.mp3")
 
     def refresh(self):
-        self.random_phrase()
-        return system("shutdown /r /t 0")
-
+        playsound("audio/Confirm_action.mp3")
+        if self.speech_to_text() == "подтверждаю":
+            self.random_phrase()
+            return system("shutdown /r /t 0")
+        else:
+            return playsound("audio/How_say_sir.mp3")
+        
     @staticmethod
     def greeting():
         current_time = datetime.now()
         if (current_time.hour > 6) and (current_time.hour < 12):
             playsound(r"audio\Good_morning.mp3")
         elif (current_time.hour > 12) and (current_time.hour < 18):
-            playsound(r"audio\Good_morning.mp3")
+            playsound(r"audio\Good_evening.mp3")
         elif (current_time.hour > 19) and (current_time.hour < 23):
-            playsound(r"audio\Good_morning.mp3")
+            playsound(r"audio\Good_afternoon.mp3")
         else:
-            playsound(r"audio\Good_morning.mp3")
+            playsound(r"audio\Greetings_at_night.mp3")
 
     @staticmethod
     def bye():
