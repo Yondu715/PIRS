@@ -23,9 +23,10 @@ SHORT_NORMALIZE = 1.0 / 32768.0
 Energy_speech = 10
 key_word = 'пирс'
 
-# Phrases
+# Phrases and ignored programs
 phrases_for_executing = ["Doing.mp3", "Will_be_done.mp3", "How_say_sir.mp3"]
 phrases_for_web_search = ["Finding_information 1.mp3", "Finding_information 2.mp3", "Request_accepted.mp3"]
+ignored_pr = ["Share", "NVIDIA", "TextInputHost", "Explorer", "explorer"]
 
 
 """ ---> Voice Assistant <--- """
@@ -120,6 +121,7 @@ class Assistant(QtCore.QObject):
             ("выключи компьютер", "выключи пк"): self.turn_off,
             ("перезагрузи компьютер", "перезагрузи пк"): self.refresh,
             ("открой калькулятор", "запусти калькулятор"): self.calc,
+            ("закрой все", "закрой все приложения"): self.close_all,
             ("пока", "заверши работу"): self.bye
         }
 
@@ -206,7 +208,22 @@ class Assistant(QtCore.QObject):
             return system("shutdown /r /t 0")
         else:
             return playsound("audio/How_say_sir.mp3")
-        
+
+    def close_all(self):
+        import subprocess
+        command = 'powershell "Get-Process | Where-Object {$_.mainWindowTitle} | Format-Table ProcessName"'
+        p = subprocess.Popen(command, stdout=subprocess.PIPE)
+        text = str(p.stdout.read()).replace('b', '')\
+                                .replace("\\r", " ")\
+                                .replace("\\n", " ")\
+                                .replace("-----------", "")\
+                                .replace("ProcessName", "")\
+                                .replace("'", "").split()
+        for task in text:
+            if task not in ignored_pr:
+                self.random_phrase(None)
+                system(f"taskkill /IM {task}.exe /f")
+
     @staticmethod
     def greeting():
         current_time = datetime.now()
