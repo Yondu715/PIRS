@@ -226,11 +226,11 @@ class Assistant(QtCore.QObject):
     @staticmethod
     def greeting():
         current_time = datetime.now()
-        if (current_time.hour > 6) and (current_time.hour < 12):
+        if (current_time.hour >= 6) and (current_time.hour < 12):
             playsound(r"audio\Good_morning.mp3")
-        elif (current_time.hour > 12) and (current_time.hour < 18):
+        elif (current_time.hour >= 12) and (current_time.hour < 18):
             playsound(r"audio\Good_evening.mp3")
-        elif (current_time.hour > 19) and (current_time.hour < 23):
+        elif (current_time.hour >= 18) and (current_time.hour < 23):
             playsound(r"audio\Good_afternoon.mp3")
         else:
             playsound(r"audio\Greetings_at_night.mp3")
