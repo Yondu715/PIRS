@@ -196,7 +196,7 @@ class Assistant(QtCore.QObject):
         playsound("audio/Confirm_action.mp3")
         if self.speech_to_text() == "подтверждаю":
             self.random_phrase()
-            return system("shutdown /s /t 0")
+            return system("shutdown /s /t ")
         else:
             return playsound("audio/How_say_sir.mp3")
 
@@ -204,7 +204,7 @@ class Assistant(QtCore.QObject):
         playsound("audio/Confirm_action.mp3")
         if self.speech_to_text() == "подтверждаю":
             self.random_phrase()
-            return system("shutdown /r /t 0")
+            return system("shutdown /r /t ")
         else:
             return playsound("audio/How_say_sir.mp3")
 

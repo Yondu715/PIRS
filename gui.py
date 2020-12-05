@@ -1,6 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
-from PyQt5 import uic, QtGui
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5 import QtGui, uic
 from PyQt5.QtCore import Qt
 from Assistant import *
 
@@ -10,26 +10,24 @@ class App(QWidget):
         super().__init__()
         self.ui = uic.loadUi("gui_pirs.ui")
         self.ui.show()
+
         self.thread = QtCore.QThread()
         self.Pirs = Assistant()
         self.Pirs.moveToThread(self.thread)
         self.ui.start.clicked.connect(self.Pirs.voice_activation)
         self.ui.start.clicked.connect(self.fix_label)
         self.thread.start()
+
         self.settings = uic.loadUi("settings.ui")
         self.ui.pushButton.clicked.connect(self.dialog)
 
+        self.settings.dinamic.setMinimum(0)
+        self.settings.dinamic.setMaximum(100)
+        self.settings.dinamic.setSingleStep(1)
+        self.settings.dinamic.setValue(50)
+
     def dialog(self):
         self.settings.show()
-
-    def check_mic(self):
-        mic_list = pyaudio.PyAudio().get_device_count()
-
-        if not mic_list:
-            description = 'Микрофоны не были обноружены в системе'
-        else:
-            description = 'Микрофон подключен'
-        QMessageBox.about(self, 'Микрофоны в системе', str(description))
 
     def fix_label(self):
         self.ui.label_2.setText("Pirs на связи")
