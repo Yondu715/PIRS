@@ -4,6 +4,7 @@ from PyQt5 import QtGui, uic
 from PyQt5.QtCore import Qt
 from Assistant import *
 
+
 class App(QWidget):
 
     def __init__(self):
@@ -44,23 +45,22 @@ class App(QWidget):
         self.settings.dinamic.setMaximum(100)
         self.settings.dinamic.setSingleStep(1)
         self.settings.dinamic.setValue(50)
-        self.settings.dinamic.valueChanged.connect(self.sliderValue_dinamic)
+        self.settings.dinamic.valueChanged.connect(self.value_dinamic)
         self.settings.progressBar_2.setValue(50)
 
         self.settings.micro.setMinimum(0)
         self.settings.micro.setMaximum(100)
         self.settings.micro.setSingleStep(1)
         self.settings.micro.setValue(50)
-        self.settings.micro.valueChanged.connect(self.sliderValue_micro)
+        self.settings.micro.valueChanged.connect(self.value_mic)
         self.settings.progressBar.setValue(50)
 
         self.settings.ok.clicked.connect(self.ok_settings)
 
-
-    def sliderValue_dinamic(self):
+    def value_dinamic(self):
         self.settings.progressBar_2.setValue(self.settings.dinamic.value())
 
-    def sliderValue_micro(self):
+    def value_mic(self):
         self.settings.progressBar.setValue(self.settings.micro.value())
 
     def ok_settings(self):
