@@ -9,7 +9,7 @@ class App(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.ui = uic.loadUi("gui_pirs.ui")
+        self.ui = uic.loadUi(r"gui\gui_pirs.ui")
         self.ui.show()
 
         self.thread = QtCore.QThread()
@@ -19,7 +19,7 @@ class App(QWidget):
         self.ui.start.clicked.connect(self.fix_label)
         self.thread.start()
 
-        self.settings = uic.loadUi("settings.ui")
+        self.settings = uic.loadUi(r"gui\settings.ui")
         self.ui.pushButton.clicked.connect(self.show_settings)
 
         self.settings.dinamic.setMinimum(0)

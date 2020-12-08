@@ -139,7 +139,7 @@ QPushButton:pressed {
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>Settings.ico</normaloff>Settings.ico</iconset>
+     <normaloff>icons\Settings.ico</normaloff>icons\Settings.ico</iconset>
    </property>
   </widget>
   <widget class="QFrame" name="frame">
