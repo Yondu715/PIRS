@@ -160,6 +160,10 @@ class Assistant(QtCore.QObject):
         audio_file = f"audio/{phrase}"
         playsound(audio_file, block=False)
 
+    @staticmethod
+    def open_site(url):
+        return wb.open(url)
+
     # Functions
     def youtube(self):
         self.random_phrase("Youtube.mp3")
@@ -214,11 +218,11 @@ class Assistant(QtCore.QObject):
         command = 'powershell "Get-Process | Where-Object {$_.mainWindowTitle} | Format-Table ProcessName"'
         p = subprocess.Popen(command, stdout=subprocess.PIPE)
         text = str(p.stdout.read()).replace('b', '')\
-                                .replace("\\r", " ")\
-                                .replace("\\n", " ")\
-                                .replace("-----------", "")\
-                                .replace("ProcessName", "")\
-                                .replace("'", "").split()
+                                   .replace("\\r", " ")\
+                                   .replace("\\n", " ")\
+                                   .replace("-----------", "")\
+                                   .replace("ProcessName", "")\
+                                   .replace("'", "").split()
         for task in text:
             if task not in ignored_pr:
                 self.random_phrase(None)
