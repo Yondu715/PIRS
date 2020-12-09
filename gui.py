@@ -2,6 +2,8 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QSystemTrayIcon, QAction, qApp, QMenu
 from PyQt5 import QtGui, uic
 from PyQt5.QtCore import Qt
+from pycaw.pycaw import AudioUtilities
+
 from Assistant import *
 
 
@@ -55,7 +57,7 @@ class App(QWidget):
         self.settings.micro.valueChanged.connect(self.value_mic)
         self.settings.progressBar.setValue(50)
 
-        self.settings.ok.clicked.connect(self.ok_settings)
+        self.settings.dinamic.valueChanged[int].connect(self.func)
 
     def value_dinamic(self):
         self.settings.progressBar_2.setValue(self.settings.dinamic.value())
@@ -63,12 +65,13 @@ class App(QWidget):
     def value_mic(self):
         self.settings.progressBar.setValue(self.settings.micro.value())
 
-    def ok_settings(self):
-        self.settings.micro.valueChanged[int].connect(self.func)
-
     @staticmethod
     def func(value):
-        print(value)
+        sessions = AudioUtilities.GetAllSessions()
+        for session in sessions:
+            volume = session.SimpleAudioVolume
+            if session.Process and session.Process.name() == "python.exe":
+                volume.SetMasterVolume(value * 0.01, None)
 
     def show_settings(self):
         self.settings.show()
