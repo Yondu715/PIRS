@@ -160,6 +160,10 @@ class Assistant(QtCore.QObject):
         audio_file = f"audio/{phrase}"
         playsound(audio_file, block=False)
 
+    @staticmethod
+    def open_site(url):
+        return wb.open(url)
+
     # Functions
     def youtube(self):
         self.random_phrase("Youtube.mp3")
