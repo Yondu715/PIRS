@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QSystemTrayIcon, QAction, qApp, QMenu
+from PyQt5.QtWidgets import QApplication, QWidget, QSystemTrayIcon, QAction, qApp, QMenu, QGraphicsDropShadowEffect
 from PyQt5 import QtGui, uic
 from PyQt5.QtCore import Qt
 from pycaw.pycaw import AudioUtilities
@@ -11,10 +11,14 @@ class App(QWidget):
 
     def __init__(self):
         super().__init__()
-
         self.ui = uic.loadUi(r"gui\gui_pirs.ui")
         self.ui.setWindowIcon(QtGui.QIcon(r"gui\icons\Face.ico"))
+        self.ui.setWindowFlag(Qt.FramelessWindowHint)
         self.ui.show()
+        self.ui.start.setGraphicsEffect(self.shadow())
+
+        self.ui.Exit.clicked.connect(self.close_win)
+        self.ui.Roll_up.clicked.connect(self.minimize_win)
 
         self.thread = QtCore.QThread()
         self.Pirs = Assistant()
@@ -41,7 +45,7 @@ class App(QWidget):
 
         self.settings = uic.loadUi(r"gui\settings.ui")
         self.settings.setWindowIcon(QtGui.QIcon(r"gui\icons\Settings.ico"))
-        self.ui.pushButton.clicked.connect(self.show_settings)
+        self.ui.settingsButton.clicked.connect(self.show_settings)
 
         self.settings.dinamic.setMinimum(0)
         self.settings.dinamic.setMaximum(100)
@@ -75,6 +79,21 @@ class App(QWidget):
 
     def show_settings(self):
         self.settings.show()
+
+    @staticmethod
+    def close_win():
+        sys.exit()
+
+    def minimize_win(self):
+        self.ui.showMinimized()
+
+    @staticmethod
+    def shadow():
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setOffset(0)
+        shadow.setBlurRadius(150)
+        shadow.setColor(QtGui.QColor(36, 172, 194))
+        return shadow
 
     def fix_label(self):
         self.ui.label_2.setText("Pirs на связи")
