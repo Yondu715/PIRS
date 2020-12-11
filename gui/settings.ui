@@ -25,6 +25,67 @@
   <property name="windowTitle">
    <string>Settings</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">* {
+background-color: rgb(19, 32, 49);
+}
+
+QPushButton {
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: black;
+  background: rgba(1, 97, 113);
+  font-size: 10px;
+  text-align: center;
+  border: 1px;
+  border-color: rgb(36, 172, 194);
+  border-style: solid;
+  }
+
+QPushButton:hover {
+    background-color: rgb(36, 172, 194);
+  }
+
+QLabel {
+	color: white;
+}
+
+QProgressBar{
+border-radius: 5px;
+text-align:center;
+color: white;
+}
+
+QProgressBar::chunk{
+border-radius: 5px;
+background-color: rgb(3, 227, 255);
+}
+
+QTextEdit{
+border:1px solid white;
+border-radius: 10px;
+margin:4px;
+color:white;
+}
+
+QSlider::groove{
+    border: 1px solid #999999;
+	border-radius: 5px;
+    height: 8px; 
+    background: qlineargradient(x1:0, y1:0, x2:0.7, y2:0, stop:0  rgb(19, 32, 49), stop:1  rgb(3, 227, 255));
+    margin: 2px 1px;
+}
+
+QSlider::handle{
+    background:white;
+    border: 1px solid #5c5c5c;
+    width: 18px;
+    margin: -2px; 
+    border-radius: 3px;
+}
+</string>
+  </property>
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
@@ -45,6 +106,9 @@
       </property>
       <property name="text">
        <string>Чувствительность микрофона</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
@@ -85,10 +149,13 @@
       <property name="text">
        <string>       Громкость динамиков</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
     </item>
     <item>
-     <widget class="QSlider" name="dinamic">
+     <widget class="QSlider" name="speaker">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -106,7 +173,7 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>280</x>
+     <x>290</x>
      <y>80</y>
      <width>161</width>
      <height>16</height>
@@ -120,6 +187,9 @@
    </property>
    <property name="text">
     <string>Введите ссылку на сайт</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QTextEdit" name="textEdit_2">
@@ -155,15 +225,21 @@
    <property name="text">
     <string>Подтвердите действие </string>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
   </widget>
   <widget class="QPushButton" name="ok">
    <property name="geometry">
     <rect>
-     <x>320</x>
+     <x>330</x>
      <y>290</y>
      <width>93</width>
      <height>28</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <property name="text">
     <string>ОК</string>
@@ -172,7 +248,7 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>80</x>
      <y>30</y>
      <width>561</width>
      <height>23</height>
@@ -186,6 +262,9 @@
    </property>
    <property name="text">
     <string>Для создания своей собственной команды заполните следующие поля</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QTextEdit" name="textEdit">
@@ -206,7 +285,7 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>150</x>
      <y>150</y>
      <width>441</width>
      <height>51</height>
@@ -218,8 +297,14 @@
      <pointsize>9</pointsize>
     </font>
    </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
    <property name="text">
     <string>Введите голосовую команду, которую будет обрабатывать Пирс</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QApplication, QWidget, QSystemTrayIcon, QAction, qAp
 from PyQt5 import QtGui, uic
 from PyQt5.QtCore import Qt
 from pycaw.pycaw import AudioUtilities
-
 from Assistant import *
 
 
@@ -11,15 +10,19 @@ class App(QWidget):
 
     def __init__(self):
         super().__init__()
+
+        # download and show main window
         self.ui = uic.loadUi(r"gui\gui_pirs.ui")
         self.ui.setWindowIcon(QtGui.QIcon(r"gui\icons\Face.ico"))
         self.ui.setWindowFlag(Qt.FramelessWindowHint)
         self.ui.show()
         self.ui.start.setGraphicsEffect(self.shadow())
 
+        # control buttons on main window
         self.ui.Exit.clicked.connect(self.close_win)
         self.ui.Roll_up.clicked.connect(self.minimize_win)
 
+        # Pirs's functions
         self.thread = QtCore.QThread()
         self.Pirs = Assistant()
         self.Pirs.moveToThread(self.thread)
@@ -27,6 +30,7 @@ class App(QWidget):
         self.ui.start.clicked.connect(self.fix_label)
         self.thread.start()
 
+        # tray menu
         self.tray_icon = QSystemTrayIcon(self)
         self.tray_icon.setIcon(QtGui.QIcon(r"gui\icons\Face.ico"))
 
@@ -43,17 +47,22 @@ class App(QWidget):
         self.tray_icon.setContextMenu(tray_menu)
         self.tray_icon.show()
 
+        # download and show settings
         self.settings = uic.loadUi(r"gui\settings.ui")
         self.settings.setWindowIcon(QtGui.QIcon(r"gui\icons\Settings.ico"))
+        self.settings.setWindowFlag(Qt.FramelessWindowHint)
         self.ui.settingsButton.clicked.connect(self.show_settings)
 
-        self.settings.dinamic.setMinimum(0)
-        self.settings.dinamic.setMaximum(100)
-        self.settings.dinamic.setSingleStep(1)
-        self.settings.dinamic.setValue(50)
-        self.settings.dinamic.valueChanged.connect(self.value_dinamic)
+        # speakers
+        self.settings.speaker.setMinimum(0)
+        self.settings.speaker.setMaximum(100)
+        self.settings.speaker.setSingleStep(1)
+        self.settings.speaker.setValue(50)
+        self.settings.speaker.valueChanged.connect(self.value_speaker)
         self.settings.progressBar_2.setValue(50)
+        self.settings.speaker.valueChanged[int].connect(self.func)
 
+        # microphone
         self.settings.micro.setMinimum(0)
         self.settings.micro.setMaximum(100)
         self.settings.micro.setSingleStep(1)
@@ -61,9 +70,7 @@ class App(QWidget):
         self.settings.micro.valueChanged.connect(self.value_mic)
         self.settings.progressBar.setValue(50)
 
-        self.settings.dinamic.valueChanged[int].connect(self.func)
-
-    def value_dinamic(self):
+    def value_speaker(self):
         self.settings.progressBar_2.setValue(self.settings.dinamic.value())
 
     def value_mic(self):
@@ -87,6 +94,7 @@ class App(QWidget):
     def minimize_win(self):
         self.ui.showMinimized()
 
+    # glow for objects
     @staticmethod
     def shadow():
         shadow = QGraphicsDropShadowEffect()
