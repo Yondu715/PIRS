@@ -73,6 +73,20 @@ class App(QWidget):
         self.settings.micro.valueChanged.connect(self.value_mic)
         self.settings.progressBar.setValue(100)
 
+        # move main window
+        def mouseClick(event):
+            if event.buttons() == Qt.LeftButton:
+                self.oldPos = event.globalPos()
+                self.start = event.pos()
+
+        def moveWindow(event):
+            if event.buttons() == Qt.LeftButton:
+                self.delta = event.globalPos() - self.ui.pos() - QtCore.QPoint(65, 0)
+                self.ui.move(self.ui.pos() + self.delta - self.start)
+
+        self.ui.titleBtn.mousePressEvent = mouseClick
+        self.ui.titleBtn.mouseMoveEvent = moveWindow
+
     def value_speaker(self):
         self.settings.progressBar_2.setValue(self.settings.speaker.value())
 
@@ -91,8 +105,7 @@ class App(QWidget):
         self.settings.show()
 
     def close_win(self):
-        self.ui.close()
-        sys.exit()
+        qApp.quit()
 
     # glow for objects
     @staticmethod

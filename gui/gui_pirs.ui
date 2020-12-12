@@ -10,6 +10,12 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="minimumSize">
    <size>
     <width>1000</width>
@@ -21,6 +27,12 @@
     <width>1000</width>
     <height>600</height>
    </size>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="tabletTracking">
+   <bool>false</bool>
   </property>
   <property name="windowTitle">
    <string>P1RS</string>
@@ -163,6 +175,9 @@ QPushButton:pressed {
      </item>
      <item>
       <widget class="QLabel" name="label_2">
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
        <property name="styleSheet">
         <string notr="true"/>
        </property>
@@ -188,6 +203,12 @@ QPushButton:pressed {
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
+   </property>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="tabletTracking">
+    <bool>false</bool>
    </property>
    <property name="styleSheet">
     <string notr="true">* {
@@ -297,6 +318,19 @@ border: 0px;
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QPushButton" name="titleBtn">
+    <property name="geometry">
+     <rect>
+      <x>65</x>
+      <y>0</y>
+      <width>870</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
   </widget>
  </widget>
