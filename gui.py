@@ -73,12 +73,13 @@ class App(QWidget):
         self.settings.micro.valueChanged.connect(self.value_mic)
         self.settings.progressBar.setValue(100)
 
-        # move main window
+        # mouse click handing
         def mouseClick(event):
             if event.buttons() == Qt.LeftButton:
                 self.oldPos = event.globalPos()
                 self.start = event.pos()
 
+        # move main window
         def moveWindow(event):
             if event.buttons() == Qt.LeftButton:
                 self.delta = event.globalPos() - self.ui.pos() - QtCore.QPoint(65, 0)
@@ -86,6 +87,15 @@ class App(QWidget):
 
         self.ui.titleBtn.mousePressEvent = mouseClick
         self.ui.titleBtn.mouseMoveEvent = moveWindow
+
+        # move settings window
+        def moveSettings(event):
+            if event.buttons() == Qt.LeftButton:
+                self.delta = event.globalPos() - self.settings.pos() - QtCore.QPoint(75, 0)
+                self.settings.move(self.settings.pos() + self.delta - self.start)
+
+        self.settings.titleBtn.mousePressEvent = mouseClick
+        self.settings.titleBtn.mouseMoveEvent = moveSettings
 
     def value_speaker(self):
         self.settings.progressBar_2.setValue(self.settings.speaker.value())

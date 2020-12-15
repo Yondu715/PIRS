@@ -38,9 +38,8 @@ QPushButton {
   background: rgba(1, 97, 113);
   font-size: 10px;
   text-align: center;
-  border: 1px;
-  border-color: rgb(36, 172, 194);
-  border-style: solid;
+  border-radius: 10px;
+  border: 1px solid rgb(36, 172, 194);
  }
 
 QPushButton:hover {
@@ -70,7 +69,7 @@ color:white;
 }
 
 QTextEdit:focus{
-border: 1px solid rgb(36, 172, 194);
+border: 1px solid  rgb(36, 172, 194);
 }
 
 QSlider::groove{
@@ -434,6 +433,19 @@ border: 0px;
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QPushButton" name="titleBtn">
+    <property name="geometry">
+     <rect>
+      <x>75</x>
+      <y>0</y>
+      <width>570</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
   </widget>
  </widget>

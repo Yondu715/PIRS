@@ -66,14 +66,13 @@
   background: rgba(1, 97, 113);
   font-size: 36px;
   text-align: center;
-  border: 1px;
-  border-color: rgb(36, 172, 194);
-  border-style: solid;
-  }
+  border-radius: 50px;
+  border: 1px solid rgb(36, 172, 194);
+}
 
 QPushButton:hover {
     background-color: rgb(36, 172, 194);
-  }
+}
     
 
 
@@ -176,7 +175,7 @@ QPushButton:pressed {
      <item>
       <widget class="QLabel" name="label_2">
        <property name="mouseTracking">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="styleSheet">
         <string notr="true"/>
