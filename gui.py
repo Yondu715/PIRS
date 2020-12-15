@@ -51,6 +51,7 @@ class App(QWidget):
         self.settings.setWindowIcon(QtGui.QIcon(r"gui\icons\Settings.ico"))
         self.settings.setWindowFlag(Qt.FramelessWindowHint)
         self.ui.settingsButton.clicked.connect(self.show_settings)
+        self.settings.ok.clicked.connect(self.getCommand)
 
         # control buttons on settings window
         self.settings.Exit.clicked.connect(self.settings.close)
@@ -131,6 +132,18 @@ class App(QWidget):
         self.ui.label_2.setAlignment(Qt.AlignCenter)
         self.ui.label_2.setFont(QtGui.QFont("MS Shell Dlg 2", 24))
         self.ui.frame.setStyleSheet("background-color: rgb(152, 251, 152)")
+
+    def getCommand(self):
+        url = self.settings.url.toPlainText()
+        command = self.settings.command.toPlainText()
+        if command != "" or command != "":
+            self.settings.warning.setText("")
+            with open("commands.txt", "a") as file:
+                file.write(url + "/" + command + "\n")
+            self.settings.url.clear()
+            self.settings.command.clear()
+        else:
+            self.settings.warning.setText("Не все поля были заполнены")
 
 
 if __name__ == '__main__':

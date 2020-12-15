@@ -160,6 +160,15 @@ class Assistant(QtCore.QObject):
         audio_file = f"audio/{phrase}"
         playsound(audio_file, block=False)
 
+    # getting commands from file "command.txt"
+    def getCommand(self):
+        with open("commands.txt") as file:
+            for line in file:
+                uc = line.replace("\n", "")
+                uc = uc.split("/")
+                url = uc[0]
+                command = uc[1]
+
     @staticmethod
     def open_site(url):
         return wb.open(url)
