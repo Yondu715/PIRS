@@ -139,7 +139,7 @@ class App(QWidget):
         if command != "" or command != "":
             self.settings.warning.setText("")
             with open("commands.txt", "a") as file:
-                file.write(url + "/" + command + "\n")
+                file.write(url + ";" + command + "\n")
             self.settings.url.clear()
             self.settings.command.clear()
         else:

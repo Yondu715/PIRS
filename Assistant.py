@@ -109,7 +109,7 @@ class Assistant(QtCore.QObject):
 
     # commands execution
     def cmd(self, task):
-        tasks = {
+        self.tasks = {
             # internet and social networks
             ("открой ютуб", "запусти ютуб"): self.youtube,
             ("открой вк", "запусти вк"): self.vk,
@@ -125,19 +125,20 @@ class Assistant(QtCore.QObject):
             ("пока", "заверши работу"): self.bye
         }
 
+        self.downloadCommand()
         max_similar = 0  # the coefficient of similarity
         cmd = ''         # command
         search_tags = ("как", "кто такой", "кто такая", "что такое", "найди", "ищи", "найти")
 
         # inaccurate search
-        for ls in tasks:
+        for ls in self.tasks:
             for i in ls:
                 rate_similar = fuzz.ratio(task, i)
                 if rate_similar > 75 and rate_similar > max_similar:
                     max_similar = rate_similar
                     cmd = ls
         try:
-            tasks[cmd]()
+            self.tasks[cmd]()
         except KeyError:
             for tag in search_tags:
                 if tag in task:
@@ -161,16 +162,17 @@ class Assistant(QtCore.QObject):
         playsound(audio_file, block=False)
 
     # getting commands from file "command.txt"
-    def getCommand(self):
+    def downloadCommand(self):
         with open("commands.txt") as file:
             for line in file:
                 uc = line.replace("\n", "")
-                uc = uc.split("/")
+                uc = uc.split(";")
                 url = uc[0]
                 command = uc[1]
+                self.tasks[tuple([command])] = lambda: self.open_site(url)
 
-    @staticmethod
-    def open_site(url):
+    def open_site(self, url):
+        self.random_phrase("Opening.mp3")
         return wb.open(url)
 
     # Functions
