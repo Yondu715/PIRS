@@ -138,7 +138,8 @@ class Assistant(QtCore.QObject):
                     max_similar = rate_similar
                     cmd = ls
         try:
-            self.tasks[cmd]()
+            try: self.open_site(self.tasks[cmd])
+            except: self.tasks[cmd]()
         except KeyError:
             for tag in search_tags:
                 if tag in task:
@@ -169,11 +170,11 @@ class Assistant(QtCore.QObject):
                 uc = uc.split(";")
                 url = uc[0]
                 command = uc[1]
-                self.tasks[tuple([command])] = lambda: self.open_site(url)
+                self.tasks[tuple([command])] = url
 
     def open_site(self, url):
+        wb.open(url)
         self.random_phrase("Opening.mp3")
-        return wb.open(url)
 
     # Functions
     def youtube(self):
