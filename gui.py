@@ -4,6 +4,8 @@ from PyQt5 import QtGui, uic
 from PyQt5.QtCore import Qt
 from pycaw.pycaw import AudioUtilities
 from Assistant import *
+import numpy as np
+import sounddevice as sd
 
 
 class App(QWidget):
@@ -111,6 +113,8 @@ class App(QWidget):
             volume = session.SimpleAudioVolume
             if session.Process and session.Process.name() == "python.exe":
                 volume.SetMasterVolume(value * 0.01, None)
+
+    
 
     def show_settings(self):
         self.settings.show()
