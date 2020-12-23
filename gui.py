@@ -4,8 +4,6 @@ from PyQt5 import QtGui, uic
 from PyQt5.QtCore import Qt
 from pycaw.pycaw import AudioUtilities
 from Assistant import *
-import numpy as np
-import sounddevice as sd
 
 
 class App(QWidget):
@@ -67,14 +65,6 @@ class App(QWidget):
         self.settings.speaker.valueChanged.connect(self.value_speaker)
         self.settings.progressBar_2.setValue(100)
         self.settings.speaker.valueChanged[int].connect(self.func)
-
-        # microphone
-        self.settings.micro.setMinimum(0)
-        self.settings.micro.setMaximum(100)
-        self.settings.micro.setSingleStep(1)
-        self.settings.micro.setValue(100)
-        self.settings.micro.valueChanged.connect(self.value_mic)
-        self.settings.progressBar.setValue(100)
 
         # mouse click handing
         def mouseClick(event):
